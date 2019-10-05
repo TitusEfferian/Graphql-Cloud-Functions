@@ -1,7 +1,6 @@
 const graphql = require('graphql');
 const admin = require('firebase-admin');
 const functions = require('firebase-functions');
-admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 
 const addType = new graphql.GraphQLObjectType({
@@ -12,18 +11,22 @@ const addType = new graphql.GraphQLObjectType({
         },
         success: {
             type: graphql.GraphQLBoolean,
+        },
+        rawResult: {
+            type: graphql.GraphQLString,
         }
     }
 })
 
 const AddUserData = {
     type: addType,
-    resolve: async ({ name, nim }) => {
+    resolve: async (_, { name, nim }) => {
         try {
-            await db.collection('users').doc('users').set({ name, nim })
+            const rawResult = await db.collection('users').doc('users').set({ name, nim })
             return {
                 message: 'success insert data',
                 success: true,
+                rawResult: JSON.stringify(rawResult),
             }
         } catch(error) {
             return {

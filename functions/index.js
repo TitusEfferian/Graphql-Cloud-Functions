@@ -6,6 +6,8 @@ const functions = require('firebase-functions');
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
 const { GraphQLObjectType, GraphQLSchema, } = require('graphql');
+const admin = require('firebase-admin');
+admin.initializeApp(functions.config().firebase);
 const GetUserQuery = require('./Query/GetUserQuery/index');
 const GetPingQuery = require('./Query/GetPingQuery/index');
 const AddUserData = require('./Mutation/AddUserData/index');
